@@ -1,4 +1,10 @@
+`2.4.0`
+-------
+
+- **Improvement:** mandatory modules can be redefined in dependant modules
+
 `2.3.0`
+-------
 
 - **Improvement:** rebuild template database if template is changed
 

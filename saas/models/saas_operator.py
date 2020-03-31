@@ -9,8 +9,6 @@ from odoo.service import db
 from odoo.service.model import execute
 from odoo.addons.queue_job.job import job
 
-MANDATORY_MODULES = ['auth_quick']
-
 
 class SAASOperator(models.Model):
     _name = 'saas.operator'
@@ -27,6 +25,9 @@ class SAASOperator(models.Model):
     db_url_template = fields.Char('DB URLs', help='Avaialble variables: {db_id}, {db_name}')
     db_name_template = fields.Char('DB Names', required=True, help='Avaialble variables: {unique_id}')
     template_operator_ids = fields.One2many('saas.template.operator', 'operator_id')
+
+    def get_mandatory_modules(self):
+        return ["auth_quick"]
 
     @api.multi
     def _create_db(self, template_db, db_name, demo, lang='en_US'):
@@ -67,7 +68,7 @@ class SAASOperator(models.Model):
     def install_modules(self, template_id, template_operator_id):
         self.ensure_one()
         modules = [module.name for module in template_id.template_module_ids]
-        modules = [('name', 'in', MANDATORY_MODULES + modules)]
+        modules = [('name', 'in', self.get_mandatory_modules() + modules)]
         if self.type == 'local':
             db = sql_db.db_connect(template_operator_id.operator_db_name)
             with api.Environment.manage(), db.cursor() as cr:
