@@ -1,0 +1,12 @@
+<!-- Copyright 2020 Eugene Molotov <https://it-projects.info/team/em230418>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html). -->
+<odoo>
+
+    <template id="saas_expiration_build" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/saas_expiration_build/static/src/js/saas_expiration_build.js"></script>
+            <link rel="stylesheet" type="text/css" href="/saas_expiration_build/static/src/css/saas_expiration_build.css"/>
+        </xpath>
+    </template>
+
+</odoo>
