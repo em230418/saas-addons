@@ -34,6 +34,7 @@ class SAASDB(models.Model):
         self.operator_id._create_db(template_db, db_name, demo, lang)
         self.state = 'done'
         self.env['saas.log'].log_db_created(self)
+        self.refresh_data()
         if callback_obj and callback_method:
             getattr(callback_obj, callback_method)()
 
