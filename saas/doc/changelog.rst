@@ -3,6 +3,7 @@
 
 - **Improvement:** mandatory modules can be redefined in dependant modules
 - **New:** added "Refresh" in build view to get data from build database
+- **Fix:** "Expected singleton" when droping builds
 
 `2.4.3`
 -------
