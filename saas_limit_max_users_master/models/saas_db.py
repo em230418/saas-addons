@@ -22,3 +22,14 @@ class SaasDb(models.Model):
         super(SaasDb, self).prepare_values_for_build(vals)
         if self.max_users_limit:
             vals.update(max_users_limit=self.max_users_limit)
+
+    def read_values_from_build(self):
+        """
+        Prevent overwriting max_users_limit on master if already defined
+        """
+        vals = super(SaasDb, self).read_values_from_build()
+
+        if self.max_users_limit:
+            vals.pop("max_users_limit")
+
+        return vals
