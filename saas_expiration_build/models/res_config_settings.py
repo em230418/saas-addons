@@ -9,4 +9,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _write_values_from_master(self, vals):
+        super(ResConfigSettings, self)._write_values_from_master(vals)
+
         self.env["ir.config_parameter"].set_param("database_expiration_date", vals.get("expiration_date"))
