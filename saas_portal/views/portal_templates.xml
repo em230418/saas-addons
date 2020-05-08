@@ -53,7 +53,7 @@
                 <t t-set="card_body">
                     <div class="row">
                         <div class="col">
-                            Expiration date
+                            <b>Expiration date</b>
                         </div>
                         <div class="col">
                             <span t-field="build.expiration_date" />
@@ -61,7 +61,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            Number of users
+                            <b>Number of users</b>
                         </div>
                         <div class="col">
                             <span t-field="build.users_count" /> / <span t-field="build.max_users_limit" />
