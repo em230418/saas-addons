@@ -21,3 +21,19 @@ class ResConfigSettings(models.TransientModel):
         """
         assert self.env.uid == SUPERUSER_ID
         return self._write_values_from_master(vals)
+
+    def read_values_for_master(self):
+        """
+        This method is also executed from master
+        """
+        assert self.env.uid == SUPERUSER_ID
+
+        vals = {}
+        self._read_values_for_master(vals)
+        return vals
+
+    def _read_values_for_master(self, vals):
+        """
+        This method is redefined in dependant modules
+        """
+        pass
