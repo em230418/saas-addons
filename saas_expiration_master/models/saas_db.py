@@ -12,6 +12,6 @@ class SaasDb(models.Model):
 
     expiration_date = fields.Datetime("Expiration date", default=lambda self: datetime.now() + timedelta(days=7))
 
-    def write_values_to_build(self, build_env):
-        super(SaasDb, self).write_values_to_build(build_env)
-        build_env['ir.config_parameter'].set_param("saas_expiration_date", self.expiration_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+    def prepare_values_for_build(self, vals):
+        super(SaasDb, self).prepare_values_for_build(vals)
+        vals.update(expiration_date=self.expiration_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
