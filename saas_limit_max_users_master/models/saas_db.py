@@ -1,8 +1,7 @@
 # Copyright 2020 Eugene Molotov <https://it-projects.info/team/em230418>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import SUPERUSER_ID, api, fields, models, sql_db
-from odoo.addons.queue_job.job import job
+from odoo import models, fields
 from odoo.exceptions import ValidationError
 
 
@@ -19,17 +18,7 @@ class SaasDb(models.Model):
             if record.max_users_limit < 1:
                 raise ValidationError("Number of allowed max users must be at least 1")
 
-    def write_values_to_build(self, build_env):
-        super(SaasDb, self).write_values_to_build(build_env)
+    def prepare_values_for_build(self, vals):
+        super(SaasDb, self).prepare_values_for_build(vals)
         if self.max_users_limit:
-            build_env.ref("saas_limit_max_users_build.max_users_limit").max_records = self.max_users_limit
-
-    def read_values_from_build(self, build_env, vals):
-        super(SaasDb, self).read_values_from_build(build_env, vals)
-        vals.update(
-            users_count=build_env['res.users'].search_count([])
-        )
-        if not self.max_users_limit:
-            vals.update(
-                max_users_limit=build_env.ref("saas_limit_max_users_build.max_users_limit").max_records
-            )
+            vals.update(max_users_limit=self.max_users_limit)
