@@ -9,10 +9,14 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _write_values_from_master(self, vals):
+        super(ResConfigSettings, self)._write_values_from_master(vals)
+
         if vals.get("max_users_limit"):
             self.env.ref("access_limit_max_users.max_users_limit").max_records = vals["max_users_limit"]
 
     def _read_values_for_master(self, vals):
+        super(ResConfigSettings, self)._read_values_for_master(vals)
+
         vals.update(
             users_count=self.env["res.users"].search_count([]),
         )
