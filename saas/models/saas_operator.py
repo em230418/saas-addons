@@ -28,7 +28,7 @@ class SAASOperator(models.Model):
     template_operator_ids = fields.One2many('saas.template.operator', 'operator_id')
 
     def get_mandatory_modules(self):
-        return ["auth_quick"]
+        return ["auth_quick", "saas_build_base"]
 
     @api.multi
     def _create_db(self, template_db, db_name, demo, lang='en_US'):
