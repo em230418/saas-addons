@@ -69,30 +69,19 @@ class SAASDB(models.Model):
 
     def refresh_data(self, should_read_from_build=True, should_write_to_build=True):
         for record in self.filtered(lambda record: (record.type, record.state) == ("build", "done")):
-            db = sql_db.db_connect(record.name)
-            with api.Environment.manage(), db.cursor() as cr:
-                env = api.Environment(cr, SUPERUSER_ID, {})
-
-                vals = {}
-                if should_read_from_build:
-                    record.read_values_from_build(env, vals)
+            if should_read_from_build:
+                vals = record.read_values_from_build()
                 if vals:
                     record.write(vals)
 
-                if should_write_to_build and not self.env.context.get("refresh_data_started"):
-                    # Writing values in seperate job to escape serialazation failure
-                    record.with_delay().write_values_to_build_job()
+            if should_write_to_build and not self.env.context.get("refresh_data_started"):
+                vals = {}
+                record.prepare_values_for_build(vals)
+                if vals:
+                    record.operator_id.build_execute_kw(record, "res.config.settings", "write_values_from_master", [vals])
 
-    @job
-    def write_values_to_build_job(self):
-        for record in self.filtered(lambda record: (record.type, record.state) == ("build", "done")):
-            db = sql_db.db_connect(record.name)
-            with api.Environment.manage(), db.cursor() as cr:
-                env = api.Environment(cr, SUPERUSER_ID, {})
-                record.write_values_to_build(env)
-
-    def write_values_to_build(self, build_env):
+    def prepare_values_for_build(self, vals):
         pass
 
-    def read_values_from_build(self, build_env, vals):
-        pass
+    def read_values_from_build(self):
+        return self.operator_id.build_execute_kw(self, "res.config.settings", "read_values_for_master")
