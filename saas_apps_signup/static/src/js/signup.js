@@ -9,7 +9,7 @@ odoo.define('saas_apps_signup.signup', function (require) {
     base.ready().then(function() {
         if ($('.oe_signup_form').length > 0) {
 
-            $('.oe_signup_form').on('submit', function (ev) {
+          $('.oe_signup_form').on('submit', function (ev) {
                 $(".loader").removeClass("hid");
             });
 
