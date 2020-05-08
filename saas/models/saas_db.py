@@ -61,21 +61,20 @@ class SAASDB(models.Model):
     @api.multi
     def write(self, vals):
         res = super(SAASDB, self).write(vals)
-        if not self.env.context.get("refresh_data_started"):  # Do not run "refresh_data", if already running it
-            self.with_context(refresh_data_started=True).refresh_data(
-                should_read_from_build=vals.get("state") == "done"
-            )
+        if not self.env.context.get("writing_from_refresh_data"):  # Do not run "refresh_data", if already running it
+            self.refresh_data()
         return res
 
     def refresh_data(self, should_read_from_build=True, should_write_to_build=True):
-        for record in self.filtered(lambda record: (record.type, record.state) == ("build", "done")):
+        for record in self.filtered(lambda record: (record.type, record.state) == ("build", "done")).with_context(writing_from_refresh_data=True):
             if should_read_from_build:
                 vals = record.read_values_from_build()
                 if vals:
                     record.write(vals)
 
-            if should_write_to_build and not self.env.context.get("refresh_data_started"):
+            if should_write_to_build:
                 vals = {}
+
                 record.prepare_values_for_build(vals)
                 if vals:
                     record.operator_id.build_execute_kw(record, "res.config.settings", "write_values_from_master", [vals])
