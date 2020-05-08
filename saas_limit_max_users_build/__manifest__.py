@@ -13,7 +13,7 @@
     "author": "IT-Projects LLC, Eugene Molotov",
     "support": "apps@it-projects.info",
     "website": "https://apps.odoo.com/apps/modules/12.0/saas_limit_max_users_build/",
-    "license": "MIT",
+    "license": "Other OSI approved licence",  # MIT
     # "price": 9.00,
     # "currency": "EUR",
 
