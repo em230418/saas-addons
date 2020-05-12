@@ -10,5 +10,5 @@ class SaasOperator(models.Model):
 
     def get_mandatory_modules(self):
         return super(SaasOperator, self).get_mandatory_modules() + [
-            "saas_limit_max_users_build"
+            "access_limit_max_users"
         ]
