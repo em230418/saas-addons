@@ -48,4 +48,4 @@ Changelog: `<doc/changelog.rst>`_
 
 Notifications on updates: `via Atom <https://github.com/it-projects-llc/misc-addons/commits/12.0/saas_access_apps_master.atom>`_, `by Email <https://blogtrottr.com/?subscribe=https://github.com/it-projects-llc/misc-addons/commits/12.0/saas_access_apps_master.atom>`_
 
-Tested on Odoo 12.0 dedac4efd0872bab71e06796f5a3158e2cf7bf15
+Tested on Odoo 12.0 6a57ad66b8374966ba7011e34cec20f6344f4f6d
