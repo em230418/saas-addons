@@ -8,16 +8,12 @@
 
 This module disallows anyone to install apps on build
 
-
-
 Credits
 =======
 
 Contributors
 ------------
 * `Eugene Molotov <https://it-projects.info/team/em230418>`__:
-
-      * :one::zero: init version of the module
 
 Sponsors
 --------
@@ -48,4 +44,4 @@ Changelog: `<doc/changelog.rst>`_
 
 Notifications on updates: `via Atom <https://github.com/it-projects-llc/saas-addons/commits/12.0/saas_access_apps_build.atom>`_, `by Email <https://blogtrottr.com/?subscribe=https://github.com/it-projects-llc/saas-addons/commits/12.0/saas_access_apps_build.atom>`_
 
-Tested on Odoo 12.0 0949b07e09fd08512fb2e6eaa6286dad11824dc2
+Tested on Odoo 12.0 6a57ad66b8374966ba7011e34cec20f6344f4f6d
