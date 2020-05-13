@@ -1,7 +1,6 @@
 <!-- Copyright 2020 Eugene Molotov <https://it-projects.info/team/em230418>
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html). -->
-<odoo>
-    <data noupdate="0">
+<odoo noupdate="0">
         <!-- Email template for new users -->
         <record id="set_password_email" model="mail.template">
             <field name="name">Auth Signup: Odoo Connection (Modified)</field>
@@ -92,5 +91,4 @@
 </td></tr>
 </table></field>
         </record>
-    </data>
 </odoo>
