@@ -29,7 +29,7 @@ class SaasDb(models.Model):
                 self.execute_kw(
                     "ir.module.module",
                     "search_read",
-                    [("state", "=", "installed"), ("application", "=", True),],
+                    [("state", "=", "installed"), ("application", "=", True)],
                     ["name"],
                 ),
             )
