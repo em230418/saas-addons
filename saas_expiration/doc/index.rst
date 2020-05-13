@@ -10,7 +10,7 @@ Installation
 Usage
 =====
 
-* Open menu ``[[ SaaS ]]>> Builds``
+* Open menu ``[[ SaaS ]] >> Builds``
 * Click on any build with state `Ready`
 * Click ``[Edit]``
 * Change field ``Expiration date`` to some date
