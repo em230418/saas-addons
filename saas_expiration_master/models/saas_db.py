@@ -8,16 +8,18 @@ from datetime import datetime, timedelta
 
 class SaasDb(models.Model):
 
-    _inherit = 'saas.db'
+    _inherit = "saas.db"
 
-    expiration_date = fields.Datetime("Expiration date", default=lambda self: datetime.now() + timedelta(days=7))
+    expiration_date = fields.Datetime(
+        "Expiration date", default=lambda self: datetime.now() + timedelta(days=7)
+    )
 
     def write_values_to_build(self):
         super(SaasDb, self).write_values_to_build()
 
-        self.operator_id.build_execute_kw(
-            self,
+        self.execute_kw(
             "ir.config_parameter",
             "set_param",
-            ["database_expiration_date", self.expiration_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)]
+            "database_expiration_date",
+            self.expiration_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         )
