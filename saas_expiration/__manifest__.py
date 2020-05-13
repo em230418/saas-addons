@@ -11,7 +11,7 @@
     "application": False,
     "author": "IT-Projects LLC, Eugene Molotov",
     "support": "apps@it-projects.info",
-    "website": "https://apps.odoo.com/apps/modules/12.0/saas_expiration_master/",
+    "website": "https://apps.odoo.com/apps/modules/12.0/saas_expiration/",
     "license": "AGPL-3",
     # "price": 9.00,
     # "currency": "EUR",
