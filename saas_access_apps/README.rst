@@ -1,14 +1,12 @@
-.. image:: https://img.shields.io/badge/license-MIT-blue.svg
-   :target: https://opensource.org/licenses/MIT
-   :alt: License: MIT
+.. image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+   :target: https://www.gnu.org/licenses/agpl
+   :alt: License: AGPL-3
 
-============================
- Saas: Access Apps (master)
-============================
+====================================
+ SaaS: Disable User To Install Apps
+====================================
 
-SHORT DESC
-
-DETAILED DESC
+This module disallows anyone to install apps on build and shows installed apps.
 
 Credits
 =======
@@ -16,8 +14,6 @@ Credits
 Contributors
 ------------
 * `Eugene Molotov <https://it-projects.info/team/em230418>`__:
-
-      * :one::zero: init version of the module
 
 Sponsors
 --------
