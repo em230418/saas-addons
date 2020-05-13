@@ -3,7 +3,7 @@
 
 {
     "name": """SaaS: limit max users""",
-    "summary": """Limits max number of users in build""",
+    "summary": """This module controls maximum amount of users that can build have.""",
     "category": "Hidden",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=12.0",
     "images": [],
