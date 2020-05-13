@@ -20,8 +20,8 @@
     "depends": [
         'saas',
         'portal',
-        'saas_expiration_master',
-        'saas_limit_max_users_master',
+        'saas_expiration',
+        'saas_limit_max_users',
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
