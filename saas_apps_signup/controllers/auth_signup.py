@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 import odoo
-from odoo import api, http, sql_db, SUPERUSER_ID
 from odoo.http import request
 from odoo.addons.auth_signup_verify_email.controllers.main import SignupVerifyEmail
 import logging
