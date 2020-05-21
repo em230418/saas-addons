@@ -152,8 +152,6 @@ odoo.define('saas_apps.model', function (require) {
     }
 
     // Downloading apps dependencies
-
-    
     base.ready().then(function() {
         // Check needs to avoid js code loading on another pages
         if (!window.location.pathname.includes('/price'))
