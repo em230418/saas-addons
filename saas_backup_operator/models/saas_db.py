@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from odoo import fields, models
+from odoo.addons.odoo_backup_sh.models import S3_STORAGE
 
 
 class SaasDb(models.Model):
@@ -23,7 +24,7 @@ class SaasDb(models.Model):
 
         self.env["odoo_backup_sh.config"].create({
             "saas_db_id": self.id,
-            "storage_service": "google_drive",
+            "storage_service": S3_STORAGE,
             "config_cron_ids": [(0, 0, {
                 "interval_type": "days",
                 "interval_number": 1,

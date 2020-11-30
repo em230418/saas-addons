@@ -19,7 +19,6 @@
 
     "depends": [
         "saas", "odoo_backup_sh",
-        "odoo_backup_sh_google_disk",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
