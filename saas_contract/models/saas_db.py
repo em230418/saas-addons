@@ -11,6 +11,34 @@ class SaasDb(models.Model):
 
     contract_id = fields.Many2one("contract.contract")
 
+    def action_show_contract(self):
+        self.ensure_one()
+        assert self.contract_id, "This build is not associated with any contract"
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Contract",
+            "res_model": "contract.contract",
+            "res_id": self.contract_id.id,
+            "view_mode": "form",
+        }
+
+    def action_create_contract(self):
+        self.ensure_one()
+        assert not self.contract_id, "This build is already associated with contract"
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Contract",
+            "res_model": "contract.contract",
+            "view_mode": "form",
+            "context": {
+                "default_contract_type": "sale",
+                "default_build_id": self.id,
+                "default_line_recurrence": True,
+            }
+        }
+
+    # TODO: поправить
+
     @api.model
     def remove_long_expired_unpaid_builds(self):
         long_expired_builds = self.env["saas.db"].search([
