@@ -18,7 +18,7 @@
     # "currency": "EUR",
 
     "depends": [
-        'saas', "contract", "saas_product",
+        "saas_expiration", "contract", "saas_product", "l10n_generic_coa",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
