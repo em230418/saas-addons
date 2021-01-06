@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class Contract(models.Model):
@@ -19,13 +20,14 @@ class Contract(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get("build_id"):
-            vals["line_recurrence"] = True
+        if vals.get("build_id") and not vals.get("line_recurrence"):
+            raise ValidationError("Cannot create SaaS contract with disabled line-level recurrence")
         return super(Contract, self).create(vals)
 
     def write(self, vals):
-        # TODO: disallow line_recurrence = False for SaaS contracts
         res = super(Contract, self).write(vals)
+        if not vals.get("line_recurrence", True) and self.mapped("build_id"):
+            raise ValidationError("Cannot unset line_recurrenct from SaaS contract")
         self.mapped("contract_line_ids")._recompute_is_paid()
         return res
 
