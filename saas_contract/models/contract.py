@@ -20,9 +20,22 @@ class Contract(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get("build_id") and not vals.get("line_recurrence"):
-            raise ValidationError("Cannot create SaaS contract with disabled line-level recurrence")
-        return super(Contract, self).create(vals)
+        build_id = vals.get("build_id") or self.env.context.get("default_build_id")
+        build = None
+
+        if build_id:
+            if not vals.get("line_recurrence"):
+                raise ValidationError("Cannot create SaaS contract with disabled line-level recurrence")
+            build = self.env["saas.db"].sudo().browse(build_id)
+            if build.contract_id:
+                raise ValidationError("Chosen build already has SaaS contract")
+
+        res = super(Contract, self).create(vals)
+
+        if build:
+            build.write({"contract_id": res.id})
+
+        return res
 
     def write(self, vals):
         res = super(Contract, self).write(vals)

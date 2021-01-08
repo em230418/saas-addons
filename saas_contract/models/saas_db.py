@@ -31,6 +31,7 @@ class SaasDb(models.Model):
             "res_model": "contract.contract",
             "view_mode": "form",
             "context": {
+                "default_name": self.name + "'s SaaS contract",
                 "default_contract_type": "sale",
                 "default_build_id": self.id,
                 "default_line_recurrence": True,
