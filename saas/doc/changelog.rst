@@ -12,6 +12,7 @@
 - **Fix:** "Connect to the Build" button now works even if admin user on build was renamed
 - **Improvement:** Added "Operators" menu to show list of operators
 - **Improvement:** saas.operator.name field is now mandatory
+- **Improvement:** Added "Install missing mandatory modules" button in build and template operator views on developer mode
 
 `2.4.3`
 -------
