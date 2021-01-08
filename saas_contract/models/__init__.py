@@ -2,5 +2,4 @@
 
 from . import account_move
 from . import saas_db
-from . import contract_contract
-from . import contract_line
+from . import contract
