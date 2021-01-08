@@ -24,6 +24,11 @@
                     groups="base.group_user"
                     />
             </xpath>
+
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='last_date_invoiced']" position="after">
+                <field name="build_id" invisible="1" />
+                <field name="is_paid" attrs="{'invisible': [('build_id', '=', False)]}" />
+            </xpath>
         </field>
     </record>
 
