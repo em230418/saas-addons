@@ -14,6 +14,7 @@
                 <button name="action_create_contract"
                         type="object"
                         string="Create SaaS contract"
+                        attrs="{'invisible': [('contract_id','!=',False)]}"
                         />
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
