@@ -36,28 +36,25 @@ class Contract(models.Model):
         for contract in self.filtered("build_id"):
             build = contract.build_id
 
-            max_users_limit = contract.contract_line_ids.filtered(
-                lambda line: line.product_id.product_tmpl_id == self.env.ref("saas_product.product_users")
-                and line.is_paid
-                and line.date_start <= fields.Date.context_today(line) <= line.date_end
-            ).mapped("quantity")
+            paid_user_product_lines = contract.contract_line_ids.get_paid_user_product_lines()
+            paid_user_product_lines_for_this_day = paid_user_product_lines.filtered(
+                lambda line: line.date_start <= fields.Date.context_today(line) <= line.date_end
+            )
 
-            is_trial = bool(contract.contract_line_ids.filtered(
+            max_users_limit = paid_user_product_lines_for_this_day.mapped("quantity")
+
+            is_trial = bool(paid_user_product_lines_for_this_day.filtered(
                 lambda line: line.product_id == self.env.ref("saas_product.product_users_trial")
-                and line.is_paid
-                and line.date_start <= fields.Date.context_today(line) <= line.date_end
             ))
 
-            build_expiration_date = max(
-                contract.contract_line_ids
-                .filtered(lambda line: line.product_id.product_tmpl_id == self.env.ref("saas_product.product_users") and line.is_paid)
-                .mapped("date_end")
-            )
+            build_expiration_date = max(paid_user_product_lines.mapped("date_end"))
 
             build.write({
                 "expiration_date": build_expiration_date,
                 "max_users_limit": sum(max_users_limit) or 1,
+                "contract_id": contract.id,
             })
+
             # TODO: тут не будет повторный раз у билда считаться?
             contract.write({
                 "build_status": is_trial and "trial" or (fields.Date.context_today(contract) <= build_expiration_date and "active" or "suspended")
