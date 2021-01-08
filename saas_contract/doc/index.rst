@@ -4,32 +4,39 @@
 
 Installation
 ============
-{Instruction about things to do before actual installation}
 
-* {OPTIONAL }`Activate longpolling <https://odoo-development.readthedocs.io/en/latest/admin/longpolling.html>`__
-* {Additional notes if any}
 * `Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way
-
-Configuration
-=============
-
-{Instruction how to configure the module before start to use it}
-
-* `Log in as SUPERUSER <https://odoo-development.readthedocs.io/en/latest/odoo/usage/login-as-superuser.html>`__
-* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* Open menu ``[[ {Menu} ]] >> {Submenu} >> {Subsubmenu}``
-* Click ``[{Button Name}]``
 
 Usage
 =====
 
-{Instruction for daily usage. It should describe how to check that module works. What shall user do and what would user get.}
+Assuming, that you already have SaaS template ready to use.
 
-* Open menu ``[[ {Menu} ]]>> {Submenu} >> {Subsubmenu}``
-* Click ``[{Button Name}]``
-* RESULT: {what user gets, how the modules changes default behaviour}
+* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
+* Open menu ``[[ SaaS ]]``
+* Create new build from template
+  * Open menu ``Templates``
+  * Choose template
+  * Click ``[Create Build]``
+  * Write build name and click ``[Create Build]``
+* Click ``[Create SaaS contract]``
+* Add line:
+  - Product ``Users (Trial)``
+  - Quantity: 5
+  - Date Start: today
+  - Date End: today + 10 days
+  - Click ``[Save & Close]``
+* Fill in other required fields
+* Click ``[Save]``
+* RESULT: build is assigned with recently created contract.
 
-Uninstallation
-==============
-
-{Optional section for uninstallation notes. Delete it if you don't have notes for uninstallation.}
+* Click ``[Creat invoices]``
+* Smart button will show ``1 invoices``. Click on it
+* Click on created invoice
+* Click ``[Post]`` if it is not posted
+* This invoice will be marked as paid, due to zero price
+* Return back to contract
+* Click ``[Update build]``
+* RESULT: build has following changes:
+  - Expiration date: today + 10 days
+  - Max allowed users: 5

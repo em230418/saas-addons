@@ -1,6 +1,6 @@
-.. image:: https://img.shields.io/badge/license-MIT-blue.svg
-   :target: https://opensource.org/licenses/MIT
-   :alt: License: MIT
+.. image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+   :target: https://www.gnu.org/licenses/agpl
+   :alt: License: AGPL-3
 
 =================
  Saas: Contracts
@@ -8,19 +8,17 @@
 
 This module manages contracts with SaaS clients
 
-TODO: detailed
-
 Credits
 =======
 
 Contributors
 ------------
-* `Eugene Molotov <https://it-projects.info/team/em230418>`__:
 
-      * :one::zero: init version of the module
+* `Eugene Molotov <https://it-projects.info/team/em230418>`__:
 
 Sponsors
 --------
+
 * `IT-Projects LLC <https://it-projects.info>`__
 
 Maintainers
@@ -37,8 +35,6 @@ Maintainers
 
 Further information
 ===================
-
-Demo: http://runbot.it-projects.info/demo/saas-addons/13.0
 
 HTML Description: https://apps.odoo.com/apps/modules/13.0/saas_contract/
 
