@@ -31,6 +31,8 @@ class SaasApp(models.Model):
                 "name": res.shortdesc,
                 "image_1920": res.icon_image,
                 "saas_app_id": res.id,
+                "is_saas_product": True,
+                "website_published: True,
             })
         return res
 
