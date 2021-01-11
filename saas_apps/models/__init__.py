@@ -1,2 +1,3 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-from . import saas_apps
+from . import saas_app
+from . import product_template

@@ -22,8 +22,8 @@
     "data": [
         'security/ir.model.access.csv',
         'views/calculator.xml',
-        'views/manage.xml',
-        "data/saas_base_template.xml",
+        'views/saas_app_views.xml',
+#        "data/saas_base_template.xml",
         "data/saas_apps_product_user.xml",
         'views/assets.xml'
     ],
