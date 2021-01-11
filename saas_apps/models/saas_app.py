@@ -32,7 +32,7 @@ class SaasApp(models.Model):
                 "image_1920": res.icon_image,
                 "saas_app_id": res.id,
                 "is_saas_product": True,
-                "website_published: True,
+                "website_published": True,
             })
         return res
 
