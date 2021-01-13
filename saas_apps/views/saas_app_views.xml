@@ -36,7 +36,7 @@
 
     <menuitem name="Manage Apps"
             id="menu_website_manage_apps_list"
-            action="action_website_manage_apps_list"
+            action="action_saas_app_list"
             parent="website.menu_website_global_configuration"
             sequence="40"
             />
