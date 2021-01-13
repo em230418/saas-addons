@@ -20,11 +20,11 @@
     "depends": ['website', 'saas_public', 'website_sale'],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "data/product_data.xml",
+        "data/saas_template_data.xml",
         'security/ir.model.access.csv',
         'views/calculator.xml',
         'views/saas_app_views.xml',
-#        "data/saas_base_template.xml",
-        "data/saas_apps_product_user.xml",
         'views/assets.xml'
     ],
     "demo": [
