@@ -2,10 +2,10 @@
 <!--Copyright 2020 Vildan Safin <https://www.it-projects.info/team/Enigma228322>
     License AGPL-3.0 (https://www.gnu.org/licenses/lgpl.html).-->
 <odoo>
-    <template id="Price">
+    <template id="price">
         <t t-call="website.layout">
             <title>Apps</title>
-            <div class="row container main-column">
+            <div class="row container main-column js_saas_apps">
                 <div class="mx-auto page-alignment">
                     <!-- Users qty -->
                     <t t-if="show_apps or show_packages">
@@ -26,14 +26,20 @@
                             <div class="mb24">
                                 <div class="form-row">
                                     <t t-foreach="apps" t-as="app">
-                                        <t t-if="app.application">
-                                            <div class="col-12 col-sm-6 col-lg-4 shadow p-3 bg-white rounded price-window text-truncate transition app">
+                                        <t t-if="True">
+                                            <div
+                                                class="col-12 col-sm-6 col-lg-4 shadow p-3 bg-white rounded text-truncate transition app"
+                                                t-att-data-name="app.name"
+                                                t-att-data-price-month="app.month_price"
+                                                t-att-data-price-year="app.year_price"
+                                                t-att-data-depends="app.dependencies_str()"
+                                            >
                                                 <div class="app-icon">
-                                                    <img t-att-src="'data:image/png;base64,%s' % to_text(app.app_image)"
+                                                    <img t-att-src="'data:image/png;base64,%s' % to_text(app.icon_image)"
                                                         style="max-width: 40px;max-height: 40px;"/>
                                                 </div>
                                                 <div class="app-data">
-                                                    <div><t t-esc="app.module_name"/></div>
+                                                    <div><t t-esc="app.shortdesc"/></div>
                                                     <div id="app-price">
                                                         <div class="yearly-price">
                                                             <div class="price-value"><t t-esc="app[0].year_price"/></div>
@@ -45,7 +51,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="app_tech_name" style="display: none"><t t-esc="app.name"/></div>
                                             </div>
                                         </t>
                                     </t>
@@ -60,7 +65,7 @@
                             <div class="mb24">
                                 <div class="form-row">
                                     <t t-foreach="packages" t-as="package">
-                                        <div class="col-12 col-sm-6 col-lg-4 shadow p-3 bg-white rounded price-window text-truncate transition app package" t-att-data-package-id="package.id" t-att-data-package-name="package.name">
+                                        <div class="col-12 col-sm-6 col-lg-4 shadow p-3 bg-white rounded price-window text-truncate transition app package" t-att-data-package-id="package.id" t-att-data-package-name="package.name" t-att-data-price-monthly="package.price_monthly" t-att-data-price-annually="package.price_annually">
                                             <div class="app-icon">
                                                 <img t-att-src="'data:image/png;base64,%s' % to_text(package.package_image)"
                                                         style="max-width: 40px;max-height: 40px;"/>
@@ -90,7 +95,7 @@
                         <div>
                             <span id="price-window" class="shadow mb-5 bg-white rounded">
                                 <div class="card-header">
-                                    <ul class="nav nav-tabs card-header-tabs" style="">
+                                    <ul class="nav nav-tabs card-header-tabs">
                                         <li class="nav-item" data-type="yearly">
                                             <a data-toggle="tab" href="#yearly" class="nav-link px-3 border-top-0 rounded-0 fw_bold active">Annually</a>
                                         </li>
