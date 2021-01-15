@@ -7,8 +7,8 @@ odoo.define("saas_apps.saas_apps", function (require) {
         return Promise.reject("DOM doesn't contain '.js_saas_apps'");
     }
 
-    var MONTHLY = "monthly";
-    var ANNUALLY = "annually";
+    var MONTHLY = "month";
+    var ANNUALLY = "year";
     var basket_apps = new Set();
     var basket_packages = new Set();
     var period = MONTHLY;
@@ -42,17 +42,18 @@ odoo.define("saas_apps.saas_apps", function (require) {
 
         var chosen_packages_prices = chosen_packages.map(priceCallback).get();
 
-        $("#price").html(_.reduce(chosen_apps_prices.concat(chosen_packages_prices), function(a, c) {
+        var sum_app_prices = _.reduce(chosen_apps_prices, function(a, c) {
             return a + c;
-        }, 0));
+        }, 0);
 
-        if (period === ANNUALLY) {
-            $("#box-period").html("year");
-        } else if (period === MONTHLY) {
-            $("#box-period").html("month");
-        } else {
-            $("#box-period").html("???");
-        }
+        var sum_package_prices = _.reduce(chosen_packages_prices, function(a, c) {
+            return a + c;
+        }, 0);
+
+        var sum_user_prices = $("#users").val() * parseFloat($("#users_block").data("price-" + period));
+
+        $("#price").html((sum_app_prices + sum_package_prices + sum_user_prices).toString());
+        $("#box-period").html(period);
     }
 
     function renderApps() {
@@ -98,4 +99,6 @@ odoo.define("saas_apps.saas_apps", function (require) {
         renderApps();
         renderTotalPrice();
     });
+
+    renderTotalPrice();
 });
