@@ -7,12 +7,23 @@ odoo.define("saas_apps.saas_apps", function (require) {
         return Promise.reject("DOM doesn't contain '.js_saas_apps'");
     }
 
-
     var MONTHLY = "monthly";
     var ANNUALLY = "annually";
     var basket_apps = new Set();
     var basket_packages = new Set();
     var period = MONTHLY;
+
+    // задаем свойства вида depends-<MODULE_NAME>=1
+    $(".app[data-depends]").each(function(i, el) {
+        var $el = $(el);
+        $el.data("depends").split(",").filter(Boolean).forEach(function(depend) {
+            $el.data("depends-" + depend, 1);
+        });
+    });
+
+    function getAppNameByElementCallback(i, el) {
+        return $(el).data("name");
+    }
 
     function renderTotalPrice() {
         function priceCallback(i, el) {
@@ -20,7 +31,7 @@ odoo.define("saas_apps.saas_apps", function (require) {
         }
 
         var chosen_apps = $(".app").filter(function(i, el) {
-            return basket_apps.has($(el).data("name"));
+            return basket_apps.has(getAppNameByElementCallback(i, el));
         });
 
         var chosen_apps_prices = chosen_apps.map(priceCallback).get();
@@ -44,6 +55,17 @@ odoo.define("saas_apps.saas_apps", function (require) {
         }
     }
 
+    function renderApps() {
+        $(".app").each(function(i, el) {
+            var $app = $(el);
+            if (basket_apps.has($app.data("name"))) {
+                $app.addClass("green-border");
+            } else {
+                $app.removeClass("green-border");
+            }
+        });
+    }
+
     $(".app").on("click", function() {
         var $el = $(this);
         var name = $el.data("name");
@@ -52,17 +74,28 @@ odoo.define("saas_apps.saas_apps", function (require) {
             var app_names_to_select = $el
                 .data("depends")
                 .split(",")
-                .filter(x => x)  // take away falsy values
+                .filter(Boolean)  // take away falsy values
                 .concat([name]);
-            app_names_to_select.forEach(function(app_name_to_select) {
-                $(".app[data-name=" + app_name_to_select + "]")
-                    .addClass("green-border")
-                ;
+            app_names_to_select.forEach(function(app_name) {
+                basket_apps.add(app_name);
             });
         } else {
-            basket_apps.delete(name);
-            $el.removeClass("green-border");
+            var app_names_to_deselect = [name];
+            while (app_names_to_deselect.length > 0) {
+                var app_names_to_deselect_next = [];
+                app_names_to_deselect.forEach(function(app_name) {
+                    // Remove from basket
+                    basket_apps.delete(app_name);
+
+                    // Find other apps that depend on this
+                    app_names_to_deselect_next = app_names_to_deselect_next.concat(
+                        $(".app:data(depends-" + app_name + ")").map(getAppNameByElementCallback).get()
+                    );
+                });
+                app_names_to_deselect = app_names_to_deselect_next;
+            }
         }
+        renderApps();
         renderTotalPrice();
     });
 });
