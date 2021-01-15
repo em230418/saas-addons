@@ -54,6 +54,7 @@
     display: flex;
     margin-bottom: 10px;
     min-width: 174px;
+    cursor: pointer;
 }
 
 .app-data{
@@ -99,7 +100,7 @@
 
 @media (min-width: 1400px) {
     #price-window
-    {   
+    {
         position: fixed;
         right: 30%;
         top: 20%;
@@ -121,7 +122,7 @@
 
 @media (min-width: 999px) {
     #price-window
-    {   
+    {
         position: fixed;
         right: 15%;
         top: 15%;
@@ -147,7 +148,7 @@
 
 @media (max-width: 799px) {
     #price-window
-    {   
+    {
         position: fixed;
         right: 0;
         bottom: -6%;
