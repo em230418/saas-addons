@@ -17,10 +17,10 @@
                             <div>
                                 <h3 class="mt16 mb8">Choose the number of <b>Users</b></h3>
                             </div>
-                            <img id="substr-users" src="/saas_apps/static/src/img/substr-users.png" alt="Decrease users qty" class="users-qty-change-buttons"/>
+                            <img id="minus-user" src="/saas_apps/static/src/img/substr-users.png" alt="Decrease users qty" class="users-qty-change-buttons"/>
                             <input class="form-control border text-right pr-2"
                             id="users" name="num_users" type="text" value="1" style="max-width: 100px;display: inline;text-align: center !important;"/>
-                            <img id="add-users" src="/saas_apps/static/src/img/add-users.png" alt="Increase users qty" class="users-qty-change-buttons"/>
+                            <img id="plus-user" src="/saas_apps/static/src/img/add-users.png" alt="Increase users qty" class="users-qty-change-buttons"/>
                         </div>
                     </t>
                     <!-- App list -->

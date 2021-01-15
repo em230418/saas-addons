@@ -15,6 +15,7 @@
     max-width: 30px;
     max-height: 30px;
     opacity: 0.5;
+    cursor: pointer;
 }
 
 .loader{

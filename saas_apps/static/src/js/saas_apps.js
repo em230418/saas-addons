@@ -100,5 +100,26 @@ odoo.define("saas_apps.saas_apps", function (require) {
         renderTotalPrice();
     });
 
+    function sanitizeUserInput() {
+        var v = $("#users").val();
+        if (parseInt(v, 10) <= 0 || v.trim() === "") {
+            $("#users").val(1);
+        }
+    }
+
+    $("#minus-user").on("click", function() {
+        sanitizeUserInput();
+        var v = parseInt($("#users").val(), 10);
+        $("#users").val(Math.max(1, v - 1));
+        renderTotalPrice();
+    });
+
+    $("#plus-user").on("click", function() {
+        sanitizeUserInput();
+        var v = parseInt($("#users").val(), 10);
+        $("#users").val(v + 1);
+        renderTotalPrice();
+    });
+
     renderTotalPrice();
 });
