@@ -3,6 +3,9 @@ odoo.define("saas_apps.saas_apps", function (require) {
 
     require('web.dom_ready');
 
+    var session = require('web.session');
+
+
     if (!$(".js_saas_apps").length) {
         return Promise.reject("DOM doesn't contain '.js_saas_apps'");
     }
@@ -50,10 +53,23 @@ odoo.define("saas_apps.saas_apps", function (require) {
             return a + c;
         }, 0);
 
-        var sum_user_prices = $("#users").val() * parseFloat($("#users_block").data("price-" + period));
+        var user_qty = parseInt($("#users").val(), 10);
+        var sum_user_prices = user_qty * parseFloat($("#users_block").data("price-" + period));
 
         $("#price").html((sum_app_prices + sum_package_prices + sum_user_prices).toString());
         $("#box-period").html(period);
+        $("#users-qty").html(user_qty);
+        $("#users-cnt-cost").html(sum_user_prices);
+        $("#apps-qty").html(chosen_apps.length);
+        $("#apps-cost").html(sum_app_prices);
+
+        if (chosen_packages.length === 0 && chosen_apps.length === 0) {
+            $("#try-trial").hide();
+            $("#buy-now").hide();
+        } else {
+            $("#try-trial").show();
+            $("#buy-now").show();
+        }
     }
 
     function renderApps() {
@@ -107,6 +123,23 @@ odoo.define("saas_apps.saas_apps", function (require) {
         }
     }
 
+    function goToBuild(build_params, template_id) {
+        session.rpc('/check_saas_template', {
+            template_id: template_id
+        }).then(function(template) {
+            if (template.state === 'ready') {
+                var url = "/saas_public/" + template.id + "/create-fast-build" + build_params;
+                console.log("Redirect to: " + url);
+                // When there's ready saas_template_operator obj, then start creating new build
+                window.location.href = url;
+            } else {
+                // If there's no ready saas_template_operator,
+                // recalling this func till the saas_template_operator obj isn't ready
+                setTimeout(goToBuild, 5000, build_params, template_id);
+            }
+        });
+    }
+
     $("#minus-user").on("click", function() {
         sanitizeUserInput();
         var v = parseInt($("#users").val(), 10);
@@ -120,6 +153,18 @@ odoo.define("saas_apps.saas_apps", function (require) {
         $("#users").val(v + 1);
         renderTotalPrice();
     });
+
+    $("#try-trial").on("click", function() {
+        // TODO: обработать packages
+        if (basket_apps.size === 0) {
+            console.error("basket_apps size is zero");
+            return;
+        }
+        var build_params = '?installing_modules=["' + Array.from(basket_apps).join('","') + '"]';
+        goToBuild(build_params);
+        $(".loader").show();
+    });
+
 
     renderTotalPrice();
 });

@@ -8,63 +8,39 @@ import urllib.parse
 
 DB_TEMPLATE = 'template_database_'
 
-class SaaSAppsController(Controller):
 
+class SaaSAppsController(Controller):
 
     @route('/price', type='http', auth='public', website=True)
     def user_page(self, **kw):
         res = request.env['res.config.settings'].sudo().get_values()
-        apps = request.env['saas.line'].sudo()
-        packages = request.env['saas.template'].sudo()
-        if not apps.search_count([]):
-            apps.refresh_lines()
-        return request.render('saas_apps.Price', {
-            'apps': apps.search([('allow_to_sell', '=', True)]),
-            'packages': packages.search([('set_as_package', '=', True)]),
-            'show_apps': bool(res['show_apps']),
-            'show_packages': bool(res['show_packages']),
-            'show_buy_now_button':bool(res['show_buy_now_button']),
-            'show_try_trial_button':bool(res['show_try_trial_button'])
+        apps = request.env['saas.app'].sudo().search([('allow_to_sell', '=', True)])
+        #packages = request.env['saas.template'].sudo().search([('is_package', '=', True)])
+        return request.render('saas_apps.price', {
+            'apps': apps,
+            'packages': [],
+            'show_apps': True, #bool(res['show_apps']),
+            'show_packages': True, # bool(res['show_packages']),
+            'show_buy_now_button': True, #bool(res['show_buy_now_button']),
+            'show_try_trial_button': True, #bool(res['show_try_trial_button'])
+            "currency": request.website.currency_id,
+            "user_month_price": request.env.ref("saas_product.product_users_monthly").lst_price,
+            "user_year_price": request.env.ref("saas_product.product_users_annually").lst_price,
+
         })
 
-    @route(['/refresh'], type='json', auth='public')
-    def catch_app_click(self, **kw):
-        apps = request.env['saas.line']
-        apps.refresh_lines()
-        return {}
-
-    @route(['/what_dependencies'], type='json', auth='public')
-    def search_incoming_app_dependencies(self, **kw):
-        app_tech_name = kw.get('root')[0]
-        app = request.env['saas.line'].sudo().search([('name', '=', app_tech_name)])
-        return {
-            'dependencies': app.dependencies_info('root')
-        }
-
-    @route(['/check_currency'], type='json', auth='public')
-    def what_company_curency_to_use(self, **kw):
-        apps = request.env['saas.line'].sudo()
-        return {
-            'currency': apps.search([])[0].currency_id.display_name,
-            'symbol': apps.search([])[0].currency_id.symbol
-        }
-
-    @route(['/take_template_id'], type='json', auth='public')
-    def is_build_created(self, **kw):
-        package = kw.get('package')
+    @route(['/check_saas_template'], type='json', auth='public')
+    def check_saas_template(self, **kw):
+        package_id = kw.get('package_id')
         templates = request.env['saas.template'].sudo()
+
         # If package exist, use package saas_template
-        template = templates.search([('set_as_package', '=', True), ('name', '=', package)])
+        template = templates.search([('is_package', '=', True), ('id', '=', package_id)])
         if not template:
             # If package wasn't selected, use base saas_template
-            template = templates.search([('set_as_base', '=', True)])
-        if not template:
-            template, saas_template_operator = self.create_new_template()
-            return {
-                'id': template.id,
-                'state': 'creating'
-            }
-        if not template.operator_ids.random_ready_operator_check():
+            template = templates.env.ref("saas_apps.base_template")
+
+        if not template.operator_ids.random_ready_operator():
             return {
                 'id': template.id,
                 'state': 'creating'
@@ -73,24 +49,6 @@ class SaaSAppsController(Controller):
             'id': template.id,
             'state': 'ready'
         }
-
-    def create_new_template(self):
-        saas_template = request.env['saas.template'].sudo().create({
-                'name': 'Base',
-                'template_demo': True,
-                'public_access': True,
-                'set_as_base': True,
-                'template_module_ids': request.env['saas.module'].sudo().search([('name', '=', 'mail')]),
-                'build_post_init': "env['ir.module.module'].search([('name', 'in', {installing_modules})]).button_immediate_install()"
-            })
-        saas_operator = request.env.ref("saas.local_operator")
-        saas_template_operator = request.env['saas.template.operator'].sudo().create({
-            'template_id': saas_template.id,
-            'operator_id': saas_operator.id,
-            'operator_db_name': DB_TEMPLATE + str(saas_template.operator_ids.search_count([]) + 1),
-        })
-        saas_template_operator.sudo().preparing_template_next()
-        return saas_template, saas_template_operator
 
     @route(['/price/take_product_ids'], type='json', auth='public')
     def take_product_ids(self, **kw):
