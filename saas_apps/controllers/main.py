@@ -24,8 +24,8 @@ class SaaSAppsController(Controller):
             'show_buy_now_button': True, #bool(res['show_buy_now_button']),
             'show_try_trial_button': True, #bool(res['show_try_trial_button'])
             "currency": request.website.currency_id,
-            "user_month_price": request.env.ref("saas_product.product_users_monthly").lst_price,
-            "user_year_price": request.env.ref("saas_product.product_users_annually").lst_price,
+            "user_month_product": request.env.ref("saas_product.product_users_monthly"),
+            "user_year_product": request.env.ref("saas_product.product_users_annually"),
 
         })
 

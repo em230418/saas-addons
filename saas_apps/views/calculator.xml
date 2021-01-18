@@ -11,8 +11,10 @@
                     <t t-if="show_apps or show_packages">
                         <div
                             id="users_block"
-                            t-att-data-price-month="user_month_price"
-                            t-att-data-price-year="user_year_price"
+                            t-att-data-price-month="user_month_product.lst_price"
+                            t-att-data-price-year="user_year_product.lst_price"
+                            t-att-data-product-id-month="user_month_product.id"
+                            t-att-data-product-id-year="user_year_product.id"
                         >
                             <div>
                                 <h3 class="mt16 mb8">Choose the number of <b>Users</b></h3>
