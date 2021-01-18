@@ -30,7 +30,7 @@
     "demo": [
     ],
     "qweb": [
-        'views/refresh.xml'
+        "static/src/xml/base.xml",
     ],
 
     "post_load": None,
