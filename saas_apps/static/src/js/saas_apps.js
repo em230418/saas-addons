@@ -14,7 +14,7 @@ odoo.define("saas_apps.saas_apps", function (require) {
     var ANNUALLY = "year";
     var basket_apps = new Set();
     var basket_packages = new Set();
-    var period = MONTHLY;
+    var period = ANNUALLY;
 
     // задаем свойства вида depends-<MODULE_NAME>=1
     $(".app[data-depends]").each(function(i, el) {
@@ -163,6 +163,24 @@ odoo.define("saas_apps.saas_apps", function (require) {
         var build_params = '?installing_modules=["' + Array.from(basket_apps).join('","') + '"]';
         goToBuild(build_params);
         $(".loader").show();
+    });
+
+    $("#buy-now").on("click", function() {
+        // TODO: обработать packages
+        if (basket_apps.size === 0) {
+            console.error("basket_apps size is zero");
+            return;
+        }
+
+        session.rpc("/price/cart/update_json", {
+            period: period,
+            user_cnt: parseInt($("#users").val(), 10),
+            product_ids: Array.from(basket_apps).map(function(m) {
+                return $("[data-name=" + m + "]").data("product-id-" + period);
+            })
+        }).then(function(res) {
+            window.location.href = res.link;
+        });
     });
 
 

@@ -38,6 +38,8 @@
                                                 t-att-data-name="app.name"
                                                 t-att-data-price-month="app.month_price"
                                                 t-att-data-price-year="app.year_price"
+                                                t-att-data-product-id-month="app.month_product_id.id"
+                                                t-att-data-product-id-year="app.year_product_id.id"
                                                 t-att-data-depends="app.dependencies_str()"
                                             >
                                                 <div class="app-icon">
