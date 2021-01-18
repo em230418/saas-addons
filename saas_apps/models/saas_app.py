@@ -73,6 +73,7 @@ class SaasApp(models.Model):
                 "saas_app_id": res.id,
                 "is_saas_product": True,
                 "website_published": True,
+                "list_price": 0,
             })
         return res
 

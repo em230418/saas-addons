@@ -23,5 +23,6 @@ class SaasTemplate(models.Model):
                 "saas_packge_id": res.id,
                 "is_saas_product": True,
                 "website_published": True,
+                "list_price": 0,
             })
         return res
