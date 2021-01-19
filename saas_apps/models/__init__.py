@@ -2,3 +2,4 @@
 from . import saas_app
 from . import saas_template
 from . import product_template
+from . import res_config_settings
