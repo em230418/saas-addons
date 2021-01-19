@@ -19,7 +19,7 @@ class Main(SignupVerifyEmail):
         if any([k in d for k in try_now_args]):
             # "Try now" is pressed
             try:
-                assert d["period"] in ("annually", "monthly")
+                assert d["period"] in ("year", "month")
                 assert int(d["max_users_limit"]) > 0
                 assert d.get("installing_modules") or d.get("saas_template_id")
                 assert not (d.get("installing_modules") and d.get("saas_template_id"))
