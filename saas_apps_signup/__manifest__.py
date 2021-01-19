@@ -18,7 +18,7 @@
     # "currency": "EUR",
 
     "depends": [
-        "auth_signup_verify_email", "saas_apps", "saas_portal", "saas_contract", "base_automation", "saas_database_limit",
+        "auth_signup_verify_email", "saas_apps", "saas_portal", "saas_contract", "base_automation", "saas_database_limit", "account_payment",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
