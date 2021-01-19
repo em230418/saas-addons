@@ -5,7 +5,7 @@ class SaasPeriodProductMixin(models.AbstractModel):
     _name = "saas.period.product.mixin"
     _description = "Period Product Mixin"
 
-    product_tmpl_id = fields.Many2one("product.template", ondelete="cascade")
+    product_tmpl_id = fields.Many2one("product.template", ondelete="cascade", readonly=True)
 
     month_product_id = fields.Many2one("product.product", string="Product for monthly subscription", compute="_compute_product_ids", store=True)
     year_product_id = fields.Many2one("product.product", string="Product for annually subscription", compute="_compute_product_ids", store=True)

@@ -13,10 +13,10 @@ odoo.define("saas_apps.saas_apps", function (require) {
     var MONTHLY = "month";
     var ANNUALLY = "year";
     var basket_apps = new Set();
-    var basket_packages = new Set();
+    var chosen_package_id = null;;
     var period = ANNUALLY;
 
-    // задаем свойства вида depends-<MODULE_NAME>=1
+    // Задаем свойства вида depends-<MODULE_NAME>=1
     $(".app[data-depends]").each(function(i, el) {
         var $el = $(el);
         $el.data("depends").split(",").filter(Boolean).forEach(function(depend) {
@@ -30,7 +30,7 @@ odoo.define("saas_apps.saas_apps", function (require) {
 
     function renderTotalPrice() {
         function priceCallback(i, el) {
-            return $(el).data("price-" + period);
+            return parseFloat($(el).data("price-" + period) || 0);
         }
 
         var chosen_apps = $(".app").filter(function(i, el) {
@@ -39,8 +39,10 @@ odoo.define("saas_apps.saas_apps", function (require) {
 
         var chosen_apps_prices = chosen_apps.map(priceCallback).get();
 
+        // Тут вполне допускается вариант, что выбрали несколько пакетов
+        // Хотя функциолом это не продусмотрено
         var chosen_packages = $(".package").filter(function(i, el) {
-            return basket_packages.has($(el).data("package-id"));
+            return $(el).data("package-id") === chosen_package_id;
         });
 
         var chosen_packages_prices = chosen_packages.map(priceCallback).get();
@@ -60,8 +62,9 @@ odoo.define("saas_apps.saas_apps", function (require) {
         $("#box-period").html(period);
         $("#users-qty").html(user_qty);
         $("#users-cnt-cost").html(sum_user_prices);
-        $("#apps-qty").html(chosen_apps.length);
-        $("#apps-cost").html(sum_app_prices);
+        // TODO: надо бы отдельно вписать package, нет?
+        $("#apps-qty").html(chosen_apps.length + chosen_packages.length);
+        $("#apps-cost").html(sum_app_prices + sum_package_prices);
 
         if (chosen_packages.length === 0 && chosen_apps.length === 0) {
             $("#try-trial").hide();
@@ -83,7 +86,13 @@ odoo.define("saas_apps.saas_apps", function (require) {
         });
     }
 
+    function renderPackages() {
+        $(".package:not([data-package-id=" + chosen_package_id + "])").removeClass("green-border");
+        $(".package[data-package-id=" + chosen_package_id + "]").addClass("green-border");
+    }
+
     $(".app").on("click", function() {
+        chosen_package_id = null;
         var $el = $(this);
         var name = $el.data("name");
         if (basket_apps.has(name) === false) {
@@ -113,6 +122,22 @@ odoo.define("saas_apps.saas_apps", function (require) {
             }
         }
         renderApps();
+        renderTotalPrice();
+    });
+
+    $(".package").on("click", function() {
+        basket_apps.clear();
+        var $el = $(this);
+        var package_id = $el.data("package-id");
+
+        if (chosen_package_id === package_id) {
+            chosen_package_id = null;
+        } else {
+            chosen_package_id = package_id;
+        }
+
+        renderApps();
+        renderPackages();
         renderTotalPrice();
     });
 
@@ -156,28 +181,36 @@ odoo.define("saas_apps.saas_apps", function (require) {
 
     $("#try-trial").on("click", function() {
         // TODO: обработать packages
-        if (basket_apps.size === 0) {
-            console.error("basket_apps size is zero");
-            return;
+        if (basket_apps.size > 0) {
+            var build_params = '?installing_modules=["' + Array.from(basket_apps).join('","') + '"]';
+            goToBuild(build_params);
+            $(".loader").show();
+        } else if (chosen_package_id) {
+            goToBuild("", parseInt(chosen_package_id, 10));
+            $(".loader").show();
+        } else {
+            alert("Please, choose apps or package first");
+
         }
-        var build_params = '?installing_modules=["' + Array.from(basket_apps).join('","') + '"]';
-        goToBuild(build_params);
-        $(".loader").show();
     });
 
     $("#buy-now").on("click", function() {
-        // TODO: обработать packages
-        if (basket_apps.size === 0) {
-            console.error("basket_apps size is zero");
+        var product_ids = [];
+        if (basket_apps.size > 0) {
+            product_ids = Array.from(basket_apps).map(function(m) {
+                return $("[data-name=" + m + "]").data("product-id-" + period);
+            });
+        } else if (chosen_package_id) {
+            product_ids = [$("[data-package-id=" + chosen_package_id + "]").data("product-id-" + period)];
+        } else {
+            alert("Please, choose apps or package first");
             return;
         }
 
         session.rpc("/price/cart/update_json", {
+            product_ids: product_ids,
             period: period,
             user_cnt: parseInt($("#users").val(), 10),
-            product_ids: Array.from(basket_apps).map(function(m) {
-                return $("[data-name=" + m + "]").data("product-id-" + period);
-            })
         }).then(function(res) {
             window.location.href = res.link;
         });

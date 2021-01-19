@@ -73,10 +73,20 @@
                             <div class="mb24">
                                 <div class="form-row">
                                     <t t-foreach="packages" t-as="package">
-                                        <div class="col-12 col-sm-6 col-lg-4 shadow p-3 bg-white rounded price-window text-truncate transition app package" t-att-data-package-id="package.id" t-att-data-package-name="package.name" t-att-data-price-month="package.price_monthly" t-att-data-price-year="package.price_annually">
+                                        <div
+                                            class="col-12 col-sm-6 col-lg-4 shadow p-3 bg-white rounded price-window text-truncate transition package"
+                                            t-att-data-package-id="package.id"
+                                            t-att-data-package-name="package.name"
+                                            t-att-data-price-month="package.month_price"
+                                            t-att-data-price-year="package.year_price"
+                                            t-att-data-product-id-month="package.month_product_id.id"
+                                            t-att-data-product-id-year="package.year_product_id.id"
+                                        >
                                             <div class="app-icon">
-                                                <img t-att-src="'data:image/png;base64,%s' % to_text(package.package_image)"
-                                                        style="max-width: 40px;max-height: 40px;"/>
+                                                <img t-if="package.package_image"
+                                                     t-att-src="'data:image/png;base64,%s' % to_text(package.package_image)"
+                                                     style="max-width: 40px;max-height: 40px;"
+                                                />
                                             </div>
                                             <div class="app-data">
                                                 <div><t t-esc="package.name"/></div>
