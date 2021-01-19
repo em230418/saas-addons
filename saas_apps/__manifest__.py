@@ -25,6 +25,8 @@
         'security/ir.model.access.csv',
         'views/calculator.xml',
         'views/saas_app_views.xml',
+        'views/saas_template_views.xml',
+        'views/res_config_settings_views.xml',
         'views/assets.xml'
     ],
     "demo": [
