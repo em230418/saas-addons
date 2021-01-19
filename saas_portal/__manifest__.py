@@ -21,7 +21,6 @@
         "security/ir.model.access.csv",
         "security/saas_db_security.xml",
         "views/portal_templates.xml",
-        "views/saas_db.xml",
     ],
     "demo": [],
     "qweb": [],
