@@ -5,7 +5,6 @@ odoo.define("saas_apps.saas_apps", function (require) {
 
     var session = require('web.session');
 
-
     if (!$(".js_saas_apps").length) {
         return Promise.reject("DOM doesn't contain '.js_saas_apps'");
     }
@@ -26,6 +25,14 @@ odoo.define("saas_apps.saas_apps", function (require) {
 
     function getAppNameByElementCallback(i, el) {
         return $(el).data("name");
+    }
+
+    function getInputs() {
+        return {
+            chosen_apps: Array.from(basket_apps),
+            chosen_package_id: chosen_package_id,
+            period: period,
+        };
     }
 
     function renderTotalPrice() {
@@ -67,11 +74,11 @@ odoo.define("saas_apps.saas_apps", function (require) {
         $("#apps-cost").html(sum_app_prices + sum_package_prices);
 
         if (chosen_packages.length === 0 && chosen_apps.length === 0) {
-            $("#try-trial").hide();
-            $("#buy-now").hide();
+            $("#try-trial-block").hide();
+            $("#buy-now-block").hide();
         } else {
-            $("#try-trial").show();
-            $("#buy-now").show();
+            $("#try-trial-block").show();
+            $("#buy-now-block").show();
         }
     }
 
@@ -180,7 +187,6 @@ odoo.define("saas_apps.saas_apps", function (require) {
     });
 
     $("#try-trial").on("click", function() {
-        // TODO: обработать packages
         if (basket_apps.size > 0) {
             var build_params = '?installing_modules=["' + Array.from(basket_apps).join('","') + '"]';
             goToBuild(build_params);
@@ -217,4 +223,8 @@ odoo.define("saas_apps.saas_apps", function (require) {
 
 
     renderTotalPrice();
+
+    return {
+        getInputs: getInputs,
+    };
 });
