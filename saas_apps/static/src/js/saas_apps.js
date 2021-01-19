@@ -27,14 +27,6 @@ odoo.define("saas_apps.saas_apps", function (require) {
         return $(el).data("name");
     }
 
-    function getInputs() {
-        return {
-            chosen_apps: Array.from(basket_apps),
-            chosen_package_id: chosen_package_id,
-            period: period,
-        };
-    }
-
     function renderTotalPrice() {
         function priceCallback(i, el) {
             return parseFloat($(el).data("price-" + period) || 0);
@@ -74,11 +66,9 @@ odoo.define("saas_apps.saas_apps", function (require) {
         $("#apps-cost").html(sum_app_prices + sum_package_prices);
 
         if (chosen_packages.length === 0 && chosen_apps.length === 0) {
-            $("#try-trial-block").hide();
-            $("#buy-now-block").hide();
+            $("#btn-block").hide();
         } else {
-            $("#try-trial-block").show();
-            $("#buy-now-block").show();
+            $("#btn-block").show();
         }
     }
 
@@ -155,6 +145,16 @@ odoo.define("saas_apps.saas_apps", function (require) {
         }
     }
 
+    function getInputs() {
+        sanitizeUserInput();
+        return {
+            chosen_apps: Array.from(basket_apps),
+            chosen_package_id: chosen_package_id,
+            period: period,
+            user_cnt: parseInt($("#users").val(), 10),
+        };
+    }
+
     function goToBuild(build_params, template_id) {
         session.rpc('/check_saas_template', {
             template_id: template_id
@@ -221,6 +221,10 @@ odoo.define("saas_apps.saas_apps", function (require) {
         });
     });
 
+    $(".switch-period").on("click", function() {
+        period = $(this).data("period");
+        renderTotalPrice();
+    });
 
     renderTotalPrice();
 
