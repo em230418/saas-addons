@@ -67,7 +67,7 @@ class AccountMove(models.Model):
                         "date_end": today + p._get_expiration_timedelta(),
                         "move_line_id": l.invoice_lines[0].id,
                     })
-                elif self.env["saas.line"].search([("product_id", "=", p.product_tmpl_id.id), ("application", "=", True)]):
+                elif self.env["saas.app"].search([("product_tmpl_id", "=", p.product_tmpl_id.id)]):
                     new_contract_lines.append({
                         "name": p.name,
                         "product_id": p.id,
@@ -76,7 +76,7 @@ class AccountMove(models.Model):
                         "date_start": today,
                         "move_line_id": l.invoice_lines[0].id,
                     })
-                elif self.env["saas.template"].search([("product_id", "=", p.product_tmpl_id.id)]):
+                elif self.env["saas.template"].search([("product_tmpl_id", "=", p.product_tmpl_id.id)]):
                     new_contract_lines.append({
                         "name": p.name,
                         "product_id": p.id,
@@ -99,5 +99,6 @@ class AccountMove(models.Model):
                 "name": "{}'s SaaS Contract".format(partner.name),
                 "partner_id": partner.id,
                 "contract_line_ids": list(map(lambda line: (0, 0, line), new_contract_lines)),
+                "line_recurrence": True,
                 "build_id": order.build_id.id,
             })

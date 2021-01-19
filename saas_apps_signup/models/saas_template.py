@@ -2,7 +2,6 @@ from odoo import models
 
 
 class SaasTemplate(models.Model):
-
     _inherit = "saas.template"
 
     def _random_ready_operator_id(self):

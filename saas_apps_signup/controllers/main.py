@@ -7,7 +7,6 @@ from slugify import slugify
 import werkzeug
 from werkzeug.urls import Href, url_encode
 from odoo import SUPERUSER_ID
-from odoo.exceptions import AccessError, MissingError
 from odoo.addons.saas_portal.controllers.main import Main as BaseCustomerPortal
 
 _logger = logging.getLogger(__name__)

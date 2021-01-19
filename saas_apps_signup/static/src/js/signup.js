@@ -1,5 +1,5 @@
 /*  Copyright 2020 Eugene Molotov <https://it-projects.info/team/em230418>
-    License MIT (https://opensource.org/licenses/MIT). */
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).*/
 odoo.define('saas_apps_signup.signup', function (require) {
     "use strict";
 

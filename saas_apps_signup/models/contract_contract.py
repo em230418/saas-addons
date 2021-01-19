@@ -16,38 +16,28 @@ class Contract(models.Model):
 
     @api.model
     def create(self, vals):
-
         record = super(Contract, self).create(vals)
-        if record.build_id:
-            record.build_id.contract_id = record
 
         if self.env.context.get("create_build"):
-
             record.with_user(SUPERUSER_ID).with_delay()._create_build()
 
         return record
-
-    def write(self, vals):
-        res = super(Contract, self).write(vals)
-
-        if "build_id" in vals:
-            build = self.env["saas.db"].sudo().browse(vals["build_id"])
-            build.write({
-                "contract_id": self.id,
-            })
-
-        self.mapped("build_id").refresh_data()
-
-        return res
 
     @api.model
     def _create_saas_contract_for_trial(self, build, max_users_limit, subscription_period, installing_modules=None, saas_template_id=None):
         partner = build.admin_user.partner_id
         contract_lines = []
         today = date.today()
+        subscription_period_suffix = ""
+        if subscription_period == "month":
+            subscription_period_suffix = "monthly"
+        elif subscription_period == "year":
+            subscription_period_suffix = "annually"
+        else:
+            raise AssertionError("Incorrect value of subscription_period: {}".format(subscription_period))
 
         expiration_date = self.env["saas.db"]._fields["expiration_date"].default()
-        product_users = self.env.ref("saas_product.product_users_{}".format(subscription_period))
+        product_users = self.env.ref("saas_product.product_users_{}".format(subscription_period_suffix))
 
         contract_lines += self.env.ref("saas_product.product_users_trial").mapped(lambda p: {
             "name": p.name,
@@ -68,24 +58,22 @@ class Contract(models.Model):
         })
 
         if installing_modules:
-            # TODO: эту часть надо будет переписывать, когда модули уже будут иметь свои продукты
-            contract_lines += self.env['saas.line']\
-                                  .search([("name", "in", installing_modules), ('application', '=', True)])\
-                                  .mapped('product_id.product_variant_id')\
+            contract_lines += self.env['saas.app']\
+                                  .search([("name", "in", installing_modules)])\
+                                  .mapped("{}_product_id".format(subscription_period))\
                                   .mapped(lambda p: {
                                       "name": p.name,
                                       "product_id": p.id,
                                       "price_unit": p.lst_price,
                                       "quantity": 1,
                                       "date_start": today,
-                                      # TODO: вообще говоря, могут быть приложения, которые надо все время оплачивать
                                   })
 
         if saas_template_id:
             saas_template_id = int(saas_template_id)
             contract_lines += self.env["saas.template"]\
                                   .browse(saas_template_id)\
-                                  .mapped('product_id.product_variant_id')\
+                                  .mapped("{}_product_id".format(subscription_period))\
                                   .mapped(lambda p: {
                                       "name": p.name,
                                       "product_id": p.id,
@@ -110,6 +98,7 @@ class Contract(models.Model):
             "name": "{}'s SaaS Contract".format(partner.name),
             "build_id": build.id,
             "partner_id": partner.id,
+            "line_recurrence": True,
             "contract_line_ids": list(map(lambda line: (0, 0, line), contract_lines))
         })
 
@@ -141,19 +130,23 @@ class Contract(models.Model):
             contract_products = contract.contract_line_ids.mapped('product_id')
             contract_product_templates = contract_products.mapped('product_tmpl_id')
 
-            build_installing_modules = self.env['saas.line'].sudo().search([('product_id', 'in', contract_product_templates.ids)]).mapped('name')
+            # fmt: off
+            build_installing_modules = self.env['saas.app'].sudo().search([
+                ("product_tmpl_id", "in", contract_product_templates.ids)
+            ]).mapped("name")
+            # fmt: on
 
             # TODO: оператор должен определяет по билду!
             template = self.env["saas.template"].search([
-                ("set_as_package", "=", True),
-                ("product_id", "in", contract_product_templates.ids),
+                ("is_package", "=", True),
+                ("product_tmpl_id", "in", contract_product_templates.ids),
             ])
             if not template:
                 template = self.env.ref("saas_apps.base_template")
             elif len(template) > 1:
                 _logger.warning("Expected only one template. Using first one from {} (given using {})".format(
                     repr(template),
-                    repr(template.mapped("product_id")),
+                    repr(template.mapped("product_tmpl_id")),
                 ))
                 template = template[0]
             template_operators = template.operator_ids

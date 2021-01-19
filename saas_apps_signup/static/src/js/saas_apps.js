@@ -3,34 +3,30 @@
 odoo.define('saas_apps_signup.saas_apps', function (require) {
     "use strict";
 
-    var get_modules_to_install = require("saas_apps.model").get_modules_to_install;
-    var get_subscription_period = require("saas_apps.model").get_subscription_period;
-    var get_chosen_package_id = require("saas_apps.model").get_chosen_package_id;
+    require("web.dom_ready");
 
-    var onGetStartedClick = function() {
-        var modules_to_install = get_modules_to_install();
-        var saas_template_id = get_chosen_package_id();
-        if (!modules_to_install) {
-            alert("Please choose modules to install");
+    var getInputs = require("saas_apps.saas_apps").getInputs;
+
+    $("#try-trial2").on("click", function() {
+        var inputs = getInputs();
+        if (!inputs.chosen_apps && !inputs.chosen_package_id) {
+            alert("Please chosen apps or package to install");
             return;
         }
-        var maxUsersCount = $("#users").val();
-        if (!parseInt(maxUsersCount)) {
-            alert("Could not parse number of users");
+
+        if (!inputs.user_cnt) {
+            alert("Number of users are not given");
             return;
         }
-        window.location = "/saas_apps_signup/make_database_for_trial?max_users_limit=" + maxUsersCount + "&period=" + get_subscription_period() + "&" + (saas_template_id ? "saas_template_id=" + saas_template_id : "installing_modules=" + modules_to_install.join(","));
-    };
 
-    // один из самых костыльных способов отвязать событие с кнопки
-    $(document).ready(function() {
-        setTimeout(function() {
-            var original_button = $("#get-started");
-            var new_button = original_button.clone().off("click");
-            new_button.appendTo(original_button.parent());
-            original_button.remove();
-            new_button.on("click", onGetStartedClick);
-        }, 1000);
+        var url = "/saas_apps_signup/make_database_for_trial?max_users_limit=" + inputs.user_cnt + "&period=" + inputs.period;
 
+        if (inputs.chosen_package_id) {
+            url += "&saas_template_id=" + inputs.chosen_package_id;
+        } else {
+            url += "&installing_modules=" + inputs.chosen_apps.join(",");
+        }
+
+        window.location = url;
     });
 });
