@@ -30,11 +30,13 @@ class SaaSAppsController(Controller):
 
     @route(['/check_saas_template'], type='json', auth='public')
     def check_saas_template(self, **kw):
-        package_id = kw.get('package_id')
+        # TODO: надо бы ошибки выводить
+        # TODO: если указанный template_id не найден, то не надо использовать базовый шаблон
+        template_id = kw.get('template_id')
         templates = request.env['saas.template'].sudo()
 
         # If package exist, use package saas_template
-        template = templates.search([('is_package', '=', True), ('id', '=', package_id)])
+        template = templates.search([('is_package', '=', True), ('id', '=', template_id)])
         if not template:
             # If package wasn't selected, use base saas_template
             template = templates.env.ref("saas_apps.base_template")
