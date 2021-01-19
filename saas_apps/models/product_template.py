@@ -5,4 +5,4 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     saas_app_id = fields.Many2one("saas.app", ondelete="cascade")
-    saas_package_id = fields.Many2one("saas.template")
+    saas_package_id = fields.Many2one("saas.template", ondelete="cascade")
