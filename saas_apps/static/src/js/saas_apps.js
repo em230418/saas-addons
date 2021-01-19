@@ -190,7 +190,6 @@ odoo.define("saas_apps.saas_apps", function (require) {
             $(".loader").show();
         } else {
             alert("Please, choose apps or package first");
-
         }
     });
 
